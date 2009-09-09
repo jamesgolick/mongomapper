@@ -37,19 +37,19 @@ class JsonSerializationTest < Test::Unit::TestCase
     json = @contact.to_json
 
     assert_no_match %r{"_id"}, json
-    assert_match %r{"name":"Konata Izumi"}, json
-    assert_match %r{"age":16}, json
-    assert json.include?(%("created_at":#{ActiveSupport::JSON.encode(Time.utc(2006, 8, 1))}))
-    assert_match %r{"awesome":true}, json
-    assert_match %r{"preferences":\{"shows":"anime"\}}, json
+    assert_match %r{"name": "Konata Izumi"}, json
+    assert_match %r{"age": 16}, json
+    assert json.include?(%("created_at": #{ActiveSupport::JSON.encode(Time.utc(2006, 8, 1))}))
+    assert_match %r{"awesome": true}, json
+    assert_match %r{"preferences": \{"shows": "anime"\}}, json
   end
   
   should "allow attribute filtering with only" do
     json = @contact.to_json(:only => [:name, :age])
 
     assert_no_match %r{"_id"}, json
-    assert_match %r{"name":"Konata Izumi"}, json
-    assert_match %r{"age":16}, json
+    assert_match %r{"name": "Konata Izumi"}, json
+    assert_match %r{"age": 16}, json
     assert_no_match %r{"awesome"}, json
     assert_no_match %r{"created_at"}, json
     assert_no_match %r{"preferences"}, json
@@ -92,17 +92,17 @@ class JsonSerializationTest < Test::Unit::TestCase
     should "be included when single method included" do
       json = @contact.to_json(:methods => :label)
       assert_match %r{"id"}, json
-      assert_match %r{"label":"Has cheezburger"}, json
-      assert_match %r{"name":"Konata Izumi"}, json
-      assert_no_match %r{"favorite_quote":"Constraints are liberating"}, json
+      assert_match %r{"label": "Has cheezburger"}, json
+      assert_match %r{"name": "Konata Izumi"}, json
+      assert_no_match %r{"favorite_quote": "Constraints are liberating"}, json
     end
     
     should "be included when multiple methods included" do
       json = @contact.to_json(:methods => [:label, :favorite_quote])
       assert_match %r{"id"}, json
-      assert_match %r{"label":"Has cheezburger"}, json
-      assert_match %r{"favorite_quote":"Constraints are liberating"}, json
-      assert_match %r{"name":"Konata Izumi"}, json
+      assert_match %r{"label": "Has cheezburger"}, json
+      assert_match %r{"favorite_quote": "Constraints are liberating"}, json
+      assert_match %r{"name": "Konata Izumi"}, json
     end
     
     should "not be included if :only is present" do
@@ -119,15 +119,15 @@ class JsonSerializationTest < Test::Unit::TestCase
     
     should "include single method" do
       json = @contact.to_json(:methods => :label)
-      assert_match %r{"label":"Has cheezburger"}, json
+      assert_match %r{"label": "Has cheezburger"}, json
     end
     
     should "include multiple methods" do
       json = @contact.to_json(:only => :name, :methods => [:label, :favorite_quote])
-      assert_match %r{"label":"Has cheezburger"}, json
-      assert_match %r{"favorite_quote":"Constraints are liberating"}, json
-      assert_match %r{"name":"Konata Izumi"}, json
-      assert_no_match %r{"age":16}, json
+      assert_match %r{"label": "Has cheezburger"}, json
+      assert_match %r{"favorite_quote": "Constraints are liberating"}, json
+      assert_match %r{"name": "Konata Izumi"}, json
+      assert_no_match %r{"age": 16}, json
       assert_no_match %r{"awesome"}, json
       assert_no_match %r{"created_at"}, json
       assert_no_match %r{"preferences"}, json
@@ -144,14 +144,14 @@ class JsonSerializationTest < Test::Unit::TestCase
 
     should "allow attribute filtering with only" do
       json = @contacts.to_json(:only => :name)
-      assert_match %r{\{"name":"David"\}}, json
-      assert_match %r{\{"name":"Mary"\}}, json
+      assert_match %r{\{"name": "David"\}}, json
+      assert_match %r{\{"name": "Mary"\}}, json
     end
     
     should "allow attribute filtering with except" do
       json = @contacts.to_json(:except => [:name, :preferences, :awesome, :created_at, :updated_at])
-      assert_match %r{"age":39},          json
-      assert_match %r{"age":14},          json
+      assert_match %r{"age": 39},         json
+      assert_match %r{"age": 14},         json
       assert_no_match %r{"name":},        json
       assert_no_match %r{"preferences":}, json
       assert_no_match %r{"awesome":},     json
@@ -167,7 +167,7 @@ class JsonSerializationTest < Test::Unit::TestCase
     }
     json = contacts.to_json(:only => [1, :name])
     assert_match %r{"1":},               json
-    assert_match %r{\{"name":"David"\}}, json
+    assert_match %r{\{"name": "David"\}}, json
     assert_no_match %r{"2":},            json
   end
   
@@ -176,14 +176,14 @@ class JsonSerializationTest < Test::Unit::TestCase
     contact.tags = [Tag.new(:name => 'awesome'), Tag.new(:name => 'ruby')]
     json = contact.to_json
     assert_match %r{"tags":}, json
-    assert_match %r{"name":"awesome"}, json
-    assert_match %r{"name":"ruby"}, json
+    assert_match %r{"name": "awesome"}, json
+    assert_match %r{"name": "ruby"}, json
   end
   
   should "include dynamic attributes" do
     contact = Contact.new(:name => 'John', :age => 27, :foo => 'bar')
     contact['smell'] = 'stinky'
     json = contact.to_json
-    assert_match %r{"smell":"stinky"}, json
+    assert_match %r{"smell": "stinky"}, json
   end
 end
