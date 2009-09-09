@@ -50,7 +50,7 @@ module MongoMapper
       end
 
       def last(options={})
-        find_last(options)
+        find_last({:order => "$natural desc"}.merge(options))
       end
 
       def all(options={})
@@ -180,18 +180,17 @@ module MongoMapper
 
         def find_first(options)
           options.merge!(:limit => 1)
-          find_every({:order => '$natural asc'}.merge(options))[0]
+          find_every(options)[0]
         end
 
         def find_last(options)
           options.merge!(:limit => 1)
           options[:order] = invert_order_clause(options)
           find_every(options)[0]
-          #find_every({:order => '$natural desc'}.merge(invert_order_clause(options)))[0]
         end
 
         def invert_order_clause(options)
-          return '$natural desc' unless options[:order]
+          return '' unless options[:order]
           options[:order].split(',').map do |order_segment| 
             if order_segment =~ /\sasc/i
               order_segment.sub /\sasc/i, ' desc'
